@@ -20,3 +20,4 @@ jobs:
         uses: ./.github/actions/hello
         with:
           Name: ${{ github.event.inputs.Name }}
+          myToken: ${{ secrets.GITHUB_TOKEN }}
