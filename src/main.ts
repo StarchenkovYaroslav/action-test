@@ -33,11 +33,11 @@ async function main() {
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
       title: `release-${name}`,
-      body: `## ${name}
-        Дата инициации: ${new Date().toISOString()}
-        Автор: ${github.context.repo.owner}   
-        Изменения с прошлого релиза:
-        ${commitMessages}`,
+      body: '## ' +  name + '\n'
+        + 'Дата инициации: ' + new Date().toISOString() + '\n'
+        + 'Автор: ' + github.context.repo.owner + '\n'
+        + 'Изменения с прошлого релиза:\n'
+        + commitMessages,
       labels: [
         'release'
       ],
