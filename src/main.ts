@@ -18,12 +18,24 @@ async function main() {
       }
     })
 
+    const diff = await octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      basehead: `prerelease-${name}...release`,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+
+    const commitMessages = diff.data.commits.map(commit => commit.commit.message).join('\n')
+
     await octokit.request('POST /repos/{owner}/{repo}/issues', {
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
       title: `release-${name}`,
       body: `
-        Дата инициации: ${new Date().toISOString()}
+        Дата инициации: ${new Date().toISOString()}\n
+        ${commitMessages}
       `,
       labels: [
         'release'
