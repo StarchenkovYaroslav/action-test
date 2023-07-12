@@ -2,18 +2,17 @@ import * as github from '@actions/github'
 import * as core from '@actions/core'
 
 async function main() {
-  let token = 'lalala'
-
   try {
     const name = core.getInput('Name')
-    token = core.getInput('myToken')
+    // @ts-ignore
+    const token = github.context.token
     const octokit = github.getOctokit(token)
 
     await octokit.request('POST /repos/{owner}/{repo}/git/refs', {
-      owner: '{owner}',
-      repo: '{repo}',
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
       ref: `refs/heads/${name}`,
-      sha: '9a0ec64fc1036243cbae9b62510a089109ea7716',
+      sha: github.context.sha,
       headers: {
         'X-GitHub-Api-Version': '2022-11-28'
       }
