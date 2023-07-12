@@ -14,9 +14,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Hello
-        uses: ./.github/actions/hello/action.yml
+        uses: ./.github/actions/hello
         with:
           Name: ${{ github.event.inputs.Name }}
