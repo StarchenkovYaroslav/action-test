@@ -9660,7 +9660,11 @@ function main() {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 title: `release-${name}`,
-                body: `Дата инициации: ${new Date().toISOString()}\n${commitMessages}`,
+                body: `## ${name}
+        Дата инициации: ${new Date().toISOString()}\n\n
+        Автор: ${github.context.repo.owner}\n\n      
+        Изменения с прошлого релиза:\n
+        ${commitMessages}\n\n`,
                 labels: [
                     'release'
                 ],
