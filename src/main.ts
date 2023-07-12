@@ -33,10 +33,7 @@ async function main() {
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
       title: `release-${name}`,
-      body: `
-        Дата инициации: ${new Date().toISOString()}\n
-        ${commitMessages}
-      `,
+      body: `Дата инициации: ${new Date().toISOString()}\n${commitMessages}`,
       labels: [
         'release'
       ],
