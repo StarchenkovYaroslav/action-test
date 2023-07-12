@@ -7,9 +7,6 @@ on:
         description: Who to greet
         required: true
         default: 'GitHub Actions'
-      myToken:
-        description: 'This is a token to access github'
-        required: true
 
 jobs:
   Hello:

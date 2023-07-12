@@ -9636,8 +9636,7 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const name = core.getInput('Name');
-            // @ts-ignore
-            const token = github.context.token;
+            const token = core.getInput('myToken');
             const octokit = github.getOctokit(token);
             yield octokit.request('POST /repos/{owner}/{repo}/git/refs', {
                 owner: github.context.repo.owner,

@@ -4,8 +4,8 @@ import * as core from '@actions/core'
 async function main() {
   try {
     const name = core.getInput('Name')
-    // @ts-ignore
-    const token = github.context.token
+    const token = core.getInput('myToken')
+
     const octokit = github.getOctokit(token)
 
     await octokit.request('POST /repos/{owner}/{repo}/git/refs', {
