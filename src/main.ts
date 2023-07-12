@@ -57,6 +57,8 @@ async function main() {
       }
     })
 
+    core.info(commitMessages)
+
   } catch (error) {
     // @ts-ignore
     core.setFailed(error.message)

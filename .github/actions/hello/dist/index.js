@@ -9682,6 +9682,7 @@ function main() {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
             });
+            core.info(commitMessages);
         }
         catch (error) {
             // @ts-ignore
