@@ -18,6 +18,21 @@ async function main() {
       }
     })
 
+    await octokit.request('POST /repos/{owner}/{repo}/issues', {
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      title: `release-${name}`,
+      body: `
+        Дата инициации: ${new Date().toISOString()}
+      `,
+      labels: [
+        'release'
+      ],
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+
     await octokit.request('POST /repos/{owner}/{repo}/pulls', {
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
