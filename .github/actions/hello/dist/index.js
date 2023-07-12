@@ -9650,7 +9650,7 @@ function main() {
             const diff = yield octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
-                basehead: `prerelease-${name}...release`,
+                basehead: `release...prerelease-${name}`,
                 headers: {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
