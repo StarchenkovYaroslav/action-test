@@ -9641,8 +9641,33 @@ function main() {
             yield octokit.request('POST /repos/{owner}/{repo}/git/refs', {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
-                ref: `refs/heads/${name}`,
+                ref: `refs/heads/prerelease-${name}`,
                 sha: github.context.sha,
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            });
+            yield octokit.request('POST /repos/{owner}/{repo}/issues', {
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                title: `release-${name}`,
+                body: `
+        Дата инициации: ${new Date().toISOString()}
+      `,
+                labels: [
+                    'release'
+                ],
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            });
+            yield octokit.request('POST /repos/{owner}/{repo}/pulls', {
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                title: `Release-${name}`,
+                body: 'New release',
+                head: `prerelease-${name}`,
+                base: 'release',
                 headers: {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
