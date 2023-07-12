@@ -11,8 +11,6 @@ on:
 jobs:
   Hello:
     runs-on: ubuntu-latest
-    permissions:
-      token: read
 
     steps:
       - name: Checkout
