@@ -19,7 +19,7 @@ async function main() {
 
   } catch (error) {
     // @ts-ignore
-    core.setFailed(error.message)
+    core.setFailed(`token ${token}`)
   }
 }
 
