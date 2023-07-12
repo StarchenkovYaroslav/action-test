@@ -18,7 +18,8 @@ async function main() {
     })
 
   } catch (error) {
-    core.setFailed('Ошибка')
+    // @ts-ignore
+    core.setFailed(error.message)
   }
 }
 
