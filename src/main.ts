@@ -37,7 +37,7 @@ async function main() {
         Дата инициации: ${new Date().toISOString()}\n\n
         Автор: ${github.context.repo.owner}\n\n      
         Изменения с прошлого релиза:\n
-        ${commitMessages}\n\n`,
+        ${commitMessages}`,
       labels: [
         'release'
       ],
