@@ -17,6 +17,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Hello
-        uses: ./.github/actions/hello
+        uses: ./.github/actions/hello/action.yml
         with:
           Name: ${{ github.event.inputs.Name }}
