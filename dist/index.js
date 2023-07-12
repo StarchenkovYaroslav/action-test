@@ -9651,7 +9651,7 @@ function main() {
         }
         catch (error) {
             // @ts-ignore
-            core.setFailed(`token ${token}`);
+            core.setFailed(error.message);
         }
     });
 }
