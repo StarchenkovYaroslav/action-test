@@ -9634,9 +9634,10 @@ const github = __nccwpck_require__(5438);
 const core = __nccwpck_require__(2186);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
+        let token = 'lalala';
         try {
             const name = core.getInput('Name');
-            const token = core.getInput('myToken');
+            token = core.getInput('myToken');
             const octokit = github.getOctokit(token);
             yield octokit.request('POST /repos/{owner}/{repo}/git/refs', {
                 owner: '{owner}',

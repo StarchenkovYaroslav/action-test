@@ -2,9 +2,11 @@ import * as github from '@actions/github'
 import * as core from '@actions/core'
 
 async function main() {
+  let token = 'lalala'
+
   try {
     const name = core.getInput('Name')
-    const token = core.getInput('myToken')
+    token = core.getInput('myToken')
     const octokit = github.getOctokit(token)
 
     await octokit.request('POST /repos/{owner}/{repo}/git/refs', {
