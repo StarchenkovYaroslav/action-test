@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "ncc build ./src/main.ts"
+    "build": "ncc build ./src/main.ts",
+    "build1": "ncc build ./src/test-results.ts",
+    "build2": "ncc build ./src/deploy-results.ts",
+    "build3": "ncc build ./src/changelog.ts"
   },
   "repository": {
     "type": "git",
