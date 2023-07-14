@@ -7,9 +7,10 @@ async function main() {
 
     const octokit = github.getOctokit(token)
 
-    const responseIssues = await octokit.request('GET /repos/{owner}/{repo}/issues', {
+    const responseIssues = await octokit.paginate(octokit.rest.issues.listForRepo, {
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
+      per_page: 100,
       labels: 'release',
       state: 'all',
       headers: {
@@ -17,7 +18,7 @@ async function main() {
       }
     })
 
-    const version = responseIssues.data.length + 1
+    const version = responseIssues.length + 1
 
     await octokit.request('POST /repos/{owner}/{repo}/git/refs', {
       owner: github.context.repo.owner,
@@ -31,7 +32,7 @@ async function main() {
 
     const issueBody =
       '## v' + version + '\n\n'
-      + '**Дата инициации:** ' + new Date().toDateString() + '\n\n'
+      + '**Дата инициации:** ' + new Date().toLocaleString() + '\n\n'
       + '**Автор:** ' + github.context.repo.owner + '\n\n'
       + '**Дата деплоя:** ' + '\n\n'
       + '### Изменения с прошлого релиза:' + '\n\n'

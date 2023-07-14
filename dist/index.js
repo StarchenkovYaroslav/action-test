@@ -9615,7 +9615,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 399:
+/***/ 9663:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -9633,54 +9633,46 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const github = __nccwpck_require__(5438);
 const core = __nccwpck_require__(2186);
 function main() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('myToken');
+            const jobName = core.getInput('jobName');
+            const pullRequestTitle = core.getInput('pullRequestTitle');
             const octokit = github.getOctokit(token);
+            const responseJobs = yield octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs', {
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                run_id: github.context.runId,
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            });
+            const testJob = responseJobs.data.jobs.find(job => job.name === jobName);
+            if (!testJob) {
+                core.setFailed('job not found');
+                return;
+            }
+            const jobInfo = `- [${testJob.name}](${testJob.html_url}): ${new Date().toLocaleString()} | ${testJob.conclusion}`;
             const responseIssues = yield octokit.request('GET /repos/{owner}/{repo}/issues', {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 labels: 'release',
-                state: 'all',
                 headers: {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
             });
-            const version = responseIssues.data.length + 1;
-            yield octokit.request('POST /repos/{owner}/{repo}/git/refs', {
+            const issue = responseIssues.data.find(issue => issue.title === pullRequestTitle);
+            if (!issue) {
+                core.setFailed('issue not found');
+                return;
+            }
+            const issueBody = (_a = issue.body) === null || _a === void 0 ? void 0 : _a.replace(/### Результаты тестов:[\s\S]*/, `$&\n${jobInfo}`);
+            yield octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
-                ref: `refs/heads/prerelease-v${version}`,
-                sha: github.context.sha,
-                headers: {
-                    'X-GitHub-Api-Version': '2022-11-28'
-                }
-            });
-            const issueBody = '## v' + version + '\n\n'
-                + '**Дата инициации:** ' + new Date().toDateString() + '\n\n'
-                + '**Автор:** ' + github.context.repo.owner + '\n\n'
-                + '**Дата деплоя:** ' + '\n\n'
-                + '### Изменения с прошлого релиза:' + '\n\n'
-                + '### Результаты тестов:' + '\n';
-            yield octokit.request('POST /repos/{owner}/{repo}/issues', {
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
-                title: `release-v${version}`,
+                issue_number: issue.number,
                 body: issueBody,
-                labels: [
-                    'release'
-                ],
-                headers: {
-                    'X-GitHub-Api-Version': '2022-11-28'
-                }
-            });
-            yield octokit.request('POST /repos/{owner}/{repo}/pulls', {
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
-                title: `release-v${version}`,
-                body: 'New release',
-                head: `prerelease-v${version}`,
-                base: 'release',
                 headers: {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
@@ -9875,7 +9867,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(399);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(9663);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()

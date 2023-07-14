@@ -24,7 +24,7 @@ async function main() {
       return
     }
 
-    const jobInfo = `- [${testJob.name}](${testJob.html_url}): ${new Date().toDateString()} | ${testJob.conclusion}`
+    const jobInfo = `- [${testJob.name}](${testJob.html_url}): ${new Date().toLocaleString()} | ${testJob.conclusion}`
 
     const responseIssues = await octokit.request('GET /repos/{owner}/{repo}/issues', {
       owner: github.context.repo.owner,
