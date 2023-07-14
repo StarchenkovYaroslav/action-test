@@ -9615,7 +9615,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 9663:
+/***/ 7036:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -9637,10 +9637,30 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('myToken');
-            const jobName = core.getInput('jobName');
             const pullRequestTitle = core.getInput('pullRequestTitle');
+            const pullRequestNumber = core.getInput('pullRequestNumber');
+            const releaseVersion = pullRequestTitle.replace('release-v', '');
             const octokit = github.getOctokit(token);
-            const responseJobs = yield octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs', {
+            const responsePull = yield octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/commits', {
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                pull_number: Number(pullRequestNumber),
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            });
+            const commitSHA = responsePull.data[responsePull.data.length - 1].sha;
+            const releaseStateLink = `[Состояние деплоя](https://github.com/StarchenkovYaroslav/${github.context.repo.repo}/tree/${commitSHA})`;
+            yield octokit.request('POST /repos/{owner}/{repo}/git/refs', {
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                ref: `refs/tags/v${releaseVersion}`,
+                sha: commitSHA,
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            });
+            const responseRun = yield octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}', {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 run_id: github.context.runId,
@@ -9648,12 +9668,7 @@ function main() {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
             });
-            const testJob = responseJobs.data.jobs.find(job => job.name === jobName);
-            if (!testJob) {
-                core.setFailed('job not found');
-                return;
-            }
-            const jobInfo = `- [${testJob.name}](${testJob.html_url}): ${new Date().toLocaleString()} | ${testJob.conclusion}`;
+            const artLink = `[Страница с артефактом](${responseRun.data.html_url})`;
             const responseIssues = yield octokit.request('GET /repos/{owner}/{repo}/issues', {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
@@ -9667,12 +9682,13 @@ function main() {
                 core.setFailed('issue not found');
                 return;
             }
-            const issueBody = (_a = issue.body) === null || _a === void 0 ? void 0 : _a.replace(/### Результаты тестов:[\s\S]*/, `$&\n${jobInfo}`);
+            const issueBody = (_a = issue.body) === null || _a === void 0 ? void 0 : _a.replace('**Дата деплоя:**', `**Дата деплоя:** ${new Date().toLocaleString()}\n\n${artLink}\n\n${releaseStateLink}`);
             yield octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 issue_number: issue.number,
                 body: issueBody,
+                state: 'closed',
                 headers: {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
@@ -9867,7 +9883,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(9663);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(7036);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
